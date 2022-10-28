@@ -1,5 +1,9 @@
 import "./User.css"
 import React,{ useState, useEffect } from "react";
+// import Posts from './Components/Posts'
+import Pagination from "./Pagination";
+import userEvent from "@testing-library/user-event";
+import { useResolvedPath } from "react-router-dom";
 
 
 
@@ -7,15 +11,18 @@ import React,{ useState, useEffect } from "react";
 
 function Landing (){
     const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [fetching, setFetching] = useState(false);
     const [error, setError] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [userPerPage, setUserPerPage] = useState(1);
 
 
 useEffect(() => {
  // data fetching here
+setFetching(true);    
 
- fetch('https://randomuser.me/api')
- .then((response) => response.json())
+fetch('https://randomuser.me/api')
+.then((response) => response.json())
     .then((actualData) => {
         console.log(actualData.results[0])
 
@@ -34,9 +41,13 @@ useEffect(() => {
             phone: actualData.results[0].phone,
             picture: actualData.results[0].picture.large
         }])
-        console.log(data)
+
+        //data is done fetching
+        setFetching(false);
+
+    
     });
-    const 
+    //empty arrray below means it only runs when it mounts 
 }, []);
 
 
@@ -44,6 +55,7 @@ useEffect(() => {
 
     return (
     <div>
+        {fetching ? <div>loading...</div> : 
         <div className="mainuser">
             <h1 className="title-heading"> HELLO, I AM A NEW USER</h1>
             <div className="user-box">
@@ -69,18 +81,17 @@ useEffect(() => {
             <button className="num">3</button>
             <button className="num">4</button>
             <button className="num">5</button>
-        </div>
+        </div> 
         <button className="next">NEXT</button>
         </div>
+
+        {/* <Posts posts={posts} loading={loading} />  */}
+        {/* <Pagination userPerPage={userPerPage} totalUsers={user.length} />  */}
         </div>
     
-    
-
-
-
-   
+    }
     </div>
-  )
+)
 }
 
 export default Landing;
